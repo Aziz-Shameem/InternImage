@@ -8,7 +8,7 @@ import os
 import torch
 import numpy as np
 import torch.distributed as dist
-from torchvision import transforms
+from torchvision import models, datasets, transforms
 from timm.data import Mixup
 from timm.data import create_transform
 from .cached_image_folder import ImageCephDataset
@@ -231,13 +231,15 @@ def build_dataset(split, config):
     elif config.DATA.DATASET == 'cifar10' :
         if prefix == 'train' and not config.EVAL_MODE:
             root = os.path.join(config.DATA.DATA_PATH, 'train')
-            dataset = ImageCephDataset(root,
-                                       'train',
-                                       transform=transform,
-                                       on_memory=config.DATA.IMG_ON_MEMORY)
+            dataset = datasets.CIFAR10(root='cifar10', train=True, download=True)
+            # dataset = ImageCephDataset(root,
+            #                            'train',
+            #                            transform=transform,
+            #                            on_memory=config.DATA.IMG_ON_MEMORY)
         elif prefix == 'val':
             root = os.path.join(config.DATA.DATA_PATH, 'val')
-            dataset = ImageCephDataset(root, 'val', transform=transform)
+            dataset = datasets.CIFAR10(root='cifar10', train=False, download=True)
+            # dataset = ImageCephDataset(root, 'val', transform=transform)
         nb_classes = 10
     else:
         raise NotImplementedError(
